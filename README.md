@@ -38,5 +38,5 @@ The application loads the QVAC Llama 3.2 1B model and uses QVAC completion to re
 Clone the repository:
 
 ```bash
-git clone https://github.com/MelmarKun/qvac-debug-detective-ai.git
-cd qvac-debug-detective-ai
+git clone https://github.com/kunjo749/qvac-emailfixer-ai.git
+cd qvac-emailfixer-ai
