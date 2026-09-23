@@ -11,78 +11,12 @@ const PORT = 3000;
 let modelId = null;
 let generationCount = 0;
 
-async function generateQuiz(notes, difficulty, questions) {
-  const total = Number(questions) || 3;
-  const generatedQuestions = [];
-
-  for (let i = 1; i <= total; i++) {
-    const prompt = `
-Create exactly ONE multiple-choice question using ONLY the study notes below.
-
-Difficulty: ${difficulty}
-Question number: ${i}
-
-Your response MUST follow this exact format:
-
-QUESTION ${i}
-[Write the question here]
-A. [choice A]
-B. [choice B]
-C. [choice C]
-D. [choice D]
-
-STRICT RULES:
-- The first line MUST be QUESTION ${i}
-- The second line MUST contain the actual question.
-- Lines 3 to 6 MUST be exactly four choices.
-- Every choice must contain different text.
-- Do not put the answer before the choices.
-- Do not repeat the question.
-- Do not add explanations.
-- Do not add an answer key.
-- Do not add markdown.
-- Do not add headings.
-- Do not add separators.
-- Use only information found in the study notes.
-- Do not use outside knowledge.
-
-Study notes:
-${notes}
-`;
-
-    const result = completion({
-      modelId,
-      history: [
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      stream: true
-    });
-
-    let output = "";
-
-    for await (const token of result.tokenStream) {
-      output += token;
-    }
-
-    generatedQuestions.push(output.trim());
-  }
-
-  generationCount++;
-
-  return generatedQuestions.join("\n\n");
-}
-
-const html = `
-
-<!DOCTYPE html>
+const html = `<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>QVAC StudyForge AI</title>
+<title>QVAC EmailFixer</title>
 
 <style>
 * {
@@ -93,97 +27,96 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #07111f;
-  color: #e8f0f8;
+  color: #eaf2ff;
 }
 
 .container {
-  width: min(1100px, 92%);
+  width: min(1050px, 92%);
   margin: auto;
 }
 
-.topbar {
+header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 0;
+  padding: 28px 0;
 }
 
-.brand {
-  font-size: 22px;
+.logo {
+  font-size: 21px;
   font-weight: 800;
 }
 
-.brand span {
-  color: #66e3a5;
+.logo span {
+  color: #62e0a7;
 }
 
-.status {
-  border: 1px solid #66e3a5;
-  color: #66e3a5;
-  padding: 8px 13px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: bold;
+.badge {
+  border: 1px solid #62e0a7;
+  color: #62e0a7;
+  border-radius: 30px;
+  padding: 8px 14px;
+  font-size: 11px;
 }
 
 .hero {
-  padding: 45px 0 35px;
+  padding: 45px 0 30px;
 }
 
 .eyebrow {
-  color: #66e3a5;
+  color: #62e0a7;
   font-size: 12px;
+  letter-spacing: 3px;
   font-weight: bold;
-  letter-spacing: 2px;
 }
 
 h1 {
-  font-size: clamp(38px, 6vw, 68px);
-  line-height: 1;
-  margin: 15px 0;
+  font-size: clamp(42px, 7vw, 72px);
+  line-height: .98;
+  margin: 16px 0;
+  max-width: 850px;
 }
 
 .hero p {
-  color: #9fb0c3;
+  color: #9fb0c7;
   max-width: 650px;
-  font-size: 17px;
   line-height: 1.6;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: 1.4fr .8fr;
-  gap: 20px;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 18px;
 }
 
 .card {
-  background: #0d1a2b;
-  border: 1px solid #1b3048;
-  border-radius: 18px;
-  padding: 24px;
+  background: #0d1b2d;
+  border: 1px solid #1d3854;
+  border-radius: 16px;
+  padding: 20px;
 }
 
 .card h2 {
   margin-top: 0;
-  font-size: 20px;
+  font-size: 17px;
 }
 
 label {
   display: block;
+  color: #9fb0c7;
+  font-size: 12px;
   margin: 18px 0 8px;
-  color: #aab8c8;
-  font-size: 13px;
 }
 
 textarea,
 select {
   width: 100%;
-  border: 1px solid #29415b;
-  background: #081522;
-  color: white;
-  border-radius: 12px;
+  border: 1px solid #294763;
+  background: #091625;
+  color: #eaf2ff;
+  border-radius: 10px;
   padding: 14px;
-  font: inherit;
+  font-size: 14px;
 }
 
 textarea {
@@ -191,135 +124,66 @@ textarea {
   resize: vertical;
 }
 
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: #66e3a5;
-}
-
-.controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+select {
+  height: 45px;
 }
 
 button {
   width: 100%;
-  margin-top: 20px;
-  padding: 15px;
+  margin-top: 18px;
   border: 0;
-  border-radius: 12px;
-  background: #66e3a5;
-  color: #06120c;
+  border-radius: 10px;
+  padding: 14px;
+  background: #62e0a7;
+  color: #061018;
   font-weight: 800;
   cursor: pointer;
 }
 
 button:hover {
-  filter: brightness(1.08);
+  opacity: .9;
 }
 
-button:disabled {
-  opacity: .5;
-  cursor: wait;
-}
-
-.engine-row {
+.status-row {
   display: flex;
   justify-content: space-between;
   padding: 14px 0;
-  border-bottom: 1px solid #1b3048;
+  border-bottom: 1px solid #1d3854;
+  font-size: 14px;
 }
 
-.engine-row:last-child {
-  border-bottom: 0;
+.status-row span:first-child {
+  color: #8ea1b8;
 }
 
-.muted {
-  color: #91a2b5;
-}
-
-.green {
-  color: #66e3a5;
+.local {
+  color: #62e0a7;
 }
 
 .output {
-  grid-column: 1 / -1;
-}
-
-#result {
   margin-top: 18px;
 }
 
-.quiz-card {
-  background: #081522;
-  border: 1px solid #203a54;
-  border-radius: 16px;
-  padding: 20px;
-  margin-top: 16px;
-}
-
-.question-number {
-  color: #66e3a5;
-  font-weight: 800;
-  font-size: 13px;
-  letter-spacing: 1px;
-}
-
-.question-text {
-  font-size: 18px;
-  font-weight: 700;
-  margin: 10px 0 16px;
-  line-height: 1.5;
-}
-
-.choice {
-  background: #0d1f31;
-  border: 1px solid #1c344b;
-  padding: 11px 13px;
+.result {
+  white-space: pre-wrap;
+  line-height: 1.7;
+  color: #eaf2ff;
+  background: #091625;
+  border: 1px solid #294763;
   border-radius: 10px;
-  margin: 7px 0;
+  padding: 18px;
+  min-height: 180px;
 }
 
-.answer-box {
-  margin-top: 16px;
-  padding: 12px;
-  border-radius: 10px;
-  background: #102b23;
-  color: #66e3a5;
-}
-
-.explanation-box {
-  margin-top: 10px;
-  padding: 12px;
-  border-radius: 10px;
-  background: #101e2d;
-  color: #b8c7d7;
-  line-height: 1.5;
-}
-
-.empty {
-  color: #91a2b5;
-  line-height: 1.6;
-}
-
-.footer {
+footer {
   text-align: center;
+  color: #657890;
   padding: 40px 0;
-  color: #6f8194;
-  font-size: 13px;
+  font-size: 12px;
 }
 
-@media(max-width: 800px) {
+@media (max-width: 800px) {
   .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .output {
-    grid-column: auto;
-  }
-
-  .controls {
     grid-template-columns: 1fr;
   }
 }
@@ -330,262 +194,173 @@ button:disabled {
 
 <div class="container">
 
-  <div class="topbar">
-    <div class="brand">QVAC <span>StudyForge</span></div>
-    <div class="status">ON-DEVICE AI</div>
+<header>
+  <div class="logo">QVAC <span>EmailFixer</span></div>
+  <div class="badge">ON-DEVICE AI</div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">LOCAL AI WRITING TOOL</div>
+  <h1>Turn rough emails into polished messages.</h1>
+  <p>
+    Paste an email, choose a writing style, and let QVAC rewrite it locally
+    using on-device AI.
+  </p>
+</section>
+
+<div class="grid">
+
+<div class="card">
+  <h2>Fix your email</h2>
+
+  <label for="email">Email text</label>
+  <textarea id="email" placeholder="Paste your email here..."></textarea>
+
+  <label for="style">Writing style</label>
+  <select id="style">
+    <option>Professional</option>
+    <option>Friendly</option>
+    <option>Formal</option>
+    <option>Concise</option>
+  </select>
+
+  <button onclick="fixEmail()">Fix My Email</button>
+</div>
+
+<div class="card">
+  <h2>QVAC Engine</h2>
+
+  <div class="status-row">
+    <span>AI Engine</span>
+    <strong>QVAC SDK</strong>
   </div>
 
-  <section class="hero">
-    <div class="eyebrow">LOCAL AI STUDY TOOL</div>
-
-    <h1>Turn your notes into a practice exam.</h1>
-
-    <p>
-      Paste your lesson notes, choose a difficulty level and generate
-      a practice exam using AI running locally on your device.
-    </p>
-  </section>
-
-  <div class="grid">
-
-    <section class="card">
-
-      <h2>Build your practice exam</h2>
-
-      <label for="notes">Study notes</label>
-
-      <textarea
-        id="notes"
-        placeholder="Paste your lesson or study notes here..."
-      ></textarea>
-
-      <div class="controls">
-
-        <div>
-          <label for="difficulty">Difficulty</label>
-
-          <select id="difficulty">
-            <option>Easy</option>
-            <option selected>Medium</option>
-            <option>Hard</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="questions">Questions</label>
-
-          <select id="questions">
-            <option value="3" selected>3 Questions</option>
-            <option value="5">5 Questions</option>
-          </select>
-        </div>
-
-      </div>
-
-      <button id="generate">
-        Generate Practice Exam
-      </button>
-
-    </section>
-
-    <aside class="card">
-
-      <h2>QVAC Engine</h2>
-
-      <div class="engine-row">
-        <span class="muted">AI Engine</span>
-        <strong>QVAC SDK</strong>
-      </div>
-
-      <div class="engine-row">
-        <span class="muted">Model</span>
-        <strong>Llama 3.2 1B</strong>
-      </div>
-
-      <div class="engine-row">
-        <span class="muted">Inference</span>
-        <strong class="green">Local / On-Device</strong>
-      </div>
-
-      <div class="engine-row">
-        <span class="muted">Generations</span>
-        <strong id="generationCount">0</strong>
-      </div>
-
-    </aside>
-
-    <section class="card output">
-
-      <h2>Practice Exam</h2>
-
-      <div id="result">
-        <div class="empty">
-          Your generated questions will appear here.
-        </div>
-      </div>
-
-    </section>
-
+  <div class="status-row">
+    <span>Model</span>
+    <strong>Llama 3.2 1B</strong>
   </div>
 
-  <div class="footer">
-    QVAC StudyForge AI | Powered by Tether QVAC SDK
+  <div class="status-row">
+    <span>Inference</span>
+    <strong class="local">Local / On-Device</strong>
   </div>
+
+  <div class="status-row">
+    <span>Generations</span>
+    <strong id="generationCount">0</strong>
+  </div>
+</div>
+
+</div>
+
+<div class="card output">
+  <h2>Improved Email</h2>
+  <div id="result" class="result">
+    Your improved email will appear here.
+  </div>
+</div>
+
+<footer>
+  QVAC EmailFixer AI | Powered by Tether QVAC SDK
+</footer>
 
 </div>
 
 <script>
+async function fixEmail() {
+  const email = document.getElementById("email").value.trim();
+  const style = document.getElementById("style").value;
+  const result = document.getElementById("result");
 
-const generateButton = document.getElementById("generate");
-const notesInput = document.getElementById("notes");
-const difficultyInput = document.getElementById("difficulty");
-const questionsInput = document.getElementById("questions");
-const result = document.getElementById("result");
-const generationCount = document.getElementById("generationCount");
-
-generateButton.addEventListener("click", async () => {
-
-  const notes = notesInput.value.trim();
-
-  if (!notes) {
-    result.innerHTML =
-      '<div class="empty">Please paste your study notes first.</div>';
+  if (!email) {
+    result.textContent = "Please paste an email first.";
     return;
   }
 
-  generateButton.disabled = true;
-  generateButton.textContent = "Generating with QVAC...";
-
-  result.innerHTML =
-    '<div class="empty">QVAC is generating your practice exam locally...</div>';
+  result.textContent = "QVAC is rewriting your email locally...";
 
   try {
-
-    const response = await fetch("/generate", {
+    const response = await fetch("/fix", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        notes,
-        difficulty: difficultyInput.value,
-        questions: questionsInput.value
+        email,
+        style
       })
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || "Generation failed");
+      throw new Error(data.error || "Generation failed.");
     }
 
-    const sections = data.result
-      .split(/(?=QUESTION\\s+\\d+)/i)
-      .map(x => x.trim())
-      .filter(Boolean);
-
-    result.innerHTML = sections.map((section, index) => {
-
-      const lines = section
-        .split("\\n")
-        .map(x => x.trim())
-        .filter(Boolean);
-
-      const title = lines[0] || "QUESTION " + (index + 1);
-
-      const questionText = lines
-        .filter(x => !/^[ABCD]\\./i.test(x))
-        .slice(1)
-        .join(" ");
-
-      const choices = lines
-        .filter(x => /^[ABCD]\\./i.test(x))
-        .map(x =>
-          x.replace(
-            /^([ABCD])\\.\\s*/i,
-            "<b>$1.</b> "
-          )
-        );
-
-      return \`
-        <div class="quiz-card">
-
-          <div class="question-number">
-            \${title}
-          </div>
-
-          <div class="question-text">
-            \${questionText}
-          </div>
-
-          <div>
-            \${choices.map(choice =>
-              \`<div class="choice">\${choice}</div>\`
-            ).join("")}
-          </div>
-
-        </div>
-      \`;
-
-    }).join("");
-
-    const status = await fetch("/status");
-    const statusData = await status.json();
-
-    generationCount.textContent = statusData.generations;
-
+    result.textContent = data.output;
+    document.getElementById("generationCount").textContent =
+      data.generationCount;
   } catch (error) {
-
-    result.innerHTML =
-      '<div class="empty">Error: ' +
-      error.message +
-      '</div>';
-
-  } finally {
-
-    generateButton.disabled = false;
-    generateButton.textContent =
-      "Generate Practice Exam";
-
+    result.textContent = "Error: " + error.message;
   }
-
-});
-
+}
 </script>
 
 </body>
-</html>
+</html>`;
+
+async function fixEmail(email, style) {
+  const prompt = `
+Rewrite the email below.
+
+Writing style: ${style}
+
+STRICT RULES:
+- Keep the original meaning.
+- Improve grammar, clarity, and professionalism.
+- Do not invent facts.
+- Do not add information that is not in the original email.
+- Return only the rewritten email.
+- Do not explain your changes.
+- Do not add markdown.
+
+Original email:
+${email}
 `;
 
+  const result = completion({
+    modelId,
+    history: [
+      {
+        role: "user",
+        content: prompt
+      }
+    ],
+    stream: true
+  });
+
+  let output = "";
+
+  for await (const token of result.tokenStream) {
+    output += token;
+  }
+
+  generationCount++;
+
+  return output.trim();
+}
+
 const server = http.createServer(async (req, res) => {
-
   if (req.method === "GET" && req.url === "/") {
-
     res.writeHead(200, {
       "Content-Type": "text/html; charset=utf-8"
     });
 
     res.end(html);
-
     return;
   }
 
-  if (req.method === "GET" && req.url === "/status") {
-
-    res.writeHead(200, {
-      "Content-Type": "application/json"
-    });
-
-    res.end(JSON.stringify({
-      ready: modelId !== null,
-      generations: generationCount
-    }));
-
-    return;
-  }
-
-  if (req.method === "POST" && req.url === "/generate") {
-
+  if (req.method === "POST" && req.url === "/fix") {
     let body = "";
 
     req.on("data", chunk => {
@@ -593,15 +368,16 @@ const server = http.createServer(async (req, res) => {
     });
 
     req.on("end", async () => {
-
       try {
-
         const data = JSON.parse(body);
 
-        const result = await generateQuiz(
-          data.notes,
-          data.difficulty,
-          data.questions
+        if (!data.email || !data.email.trim()) {
+          throw new Error("Email text is required.");
+        }
+
+        const output = await fixEmail(
+          data.email,
+          data.style || "Professional"
         );
 
         res.writeHead(200, {
@@ -609,13 +385,11 @@ const server = http.createServer(async (req, res) => {
         });
 
         res.end(JSON.stringify({
-          result
+          output,
+          generationCount
         }));
 
       } catch (error) {
-
-        console.error(error);
-
         res.writeHead(500, {
           "Content-Type": "application/json"
         });
@@ -623,9 +397,7 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({
           error: error.message
         }));
-
       }
-
     });
 
     return;
@@ -633,12 +405,10 @@ const server = http.createServer(async (req, res) => {
 
   res.writeHead(404);
   res.end("Not found");
-
 });
 
 async function start() {
-
-  console.log("Starting QVAC StudyForge AI...");
+  console.log("Starting QVAC EmailFixer AI...");
   console.log("Loading QVAC local model...");
 
   modelId = await loadModel({
@@ -649,37 +419,19 @@ async function start() {
   console.log("Model ID:", modelId);
 
   server.listen(PORT, () => {
-
     console.log("");
-    console.log("QVAC StudyForge AI is running.");
+    console.log("QVAC EmailFixer AI is running.");
     console.log("Open http://localhost:" + PORT);
     console.log("Inference mode: ON-DEVICE");
-
   });
-
 }
 
-async function shutdown() {
-
+process.on("SIGINT", async () => {
   if (modelId) {
-    await unloadModel({
-      modelId
-    });
+    await unloadModel({ modelId });
   }
 
   process.exit(0);
-
-}
-
-process.on("SIGINT", shutdown);
-process.on("SIGTERM", shutdown);
-
-start().catch(error => {
-
-  console.error("Failed to start StudyForge:");
-  console.error(error);
-
-  process.exit(1);
-
 });
 
+start();
