@@ -17,24 +17,34 @@ async function generateQuiz(notes, difficulty, questions) {
 
   for (let i = 1; i <= total; i++) {
     const prompt = `
-Create ONE multiple-choice question based ONLY on the study notes. Do NOT copy or repeat the study notes in your answer. Return ONLY the question and four choices. Do not add introductions, summaries, notes, or extra text.
+Create exactly ONE multiple-choice question using ONLY the study notes below.
 
 Difficulty: ${difficulty}
+Question number: ${i}
 
-Requirements:
-- Write exactly one question.
-- Give exactly four choices.
-- Use this format:
+Your response MUST follow this exact format:
 
 QUESTION ${i}
-Question text
+[Write the question here]
+A. [choice A]
+B. [choice B]
+C. [choice C]
+D. [choice D]
 
-A. choice
-B. choice
-C. choice
-D. choice
-
-Do not provide the answer.
+STRICT RULES:
+- The first line MUST be QUESTION ${i}
+- The second line MUST contain the actual question.
+- Lines 3 to 6 MUST be exactly four choices.
+- Every choice must contain different text.
+- Do not put the answer before the choices.
+- Do not repeat the question.
+- Do not add explanations.
+- Do not add an answer key.
+- Do not add markdown.
+- Do not add headings.
+- Do not add separators.
+- Use only information found in the study notes.
+- Do not use outside knowledge.
 
 Study notes:
 ${notes}
@@ -62,16 +72,14 @@ ${notes}
 
   generationCount++;
 
-  return generatedQuestions.join(
-    "\n\n------------------------------\n\n"
-  );
+  return generatedQuestions.join("\n\n");
 }
 
 const html = `
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
+<head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>QVAC StudyForge AI</title>
