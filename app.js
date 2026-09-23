@@ -1,4 +1,4 @@
-import {
+﻿import {
   loadModel,
   LLAMA_3_2_1B_INST_Q4_0,
   completion,
@@ -144,9 +144,9 @@ const html = `
 <body>
 
 <header>
-  <h1>??? QVAC Debug Detective AI</h1>
+  <h1>QVAC Debug Detective AI</h1>
   <p>Local AI debugging assistant powered by Tether QVAC</p>
-  <div class="badge">? ON-DEVICE AI</div>
+  <div class="badge">[ON-DEVICE AI]</div>
 </header>
 
 <main>
@@ -290,10 +290,7 @@ Keep the answer concise and technically accurate.
 const server = http.createServer(async (req, res) => {
 
   if (req.method === "GET" && req.url === "/") {
-    res.writeHead(200, {
-      "Content-Type": "text/html; charset=utf-8"
-    });
-
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(html);
     return;
   }
@@ -317,7 +314,6 @@ const server = http.createServer(async (req, res) => {
             data.error,
             data.goal
           );
-
           res.writeHead(200, {
             "Content-Type": "application/json; charset=utf-8"
           });
@@ -356,7 +352,7 @@ const server = http.createServer(async (req, res) => {
 
 async function start() {
 
-  console.log("?? Loading QVAC Debug Detective AI...");
+  console.log("QVAC Debug Detective AI");
 
   modelId = await loadModel({
     modelSrc: LLAMA_3_2_1B_INST_Q4_0,
@@ -400,3 +396,4 @@ start().catch(error => {
   console.error("? QVAC Error:", error);
   process.exit(1);
 });
+
