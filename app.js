@@ -1,4 +1,4 @@
-﻿import http from "http";
+import http from "http";
 import {
   loadModel,
   LLAMA_3_2_1B_INST_Q4_0,
@@ -17,7 +17,7 @@ async function generateQuiz(notes, difficulty, questions) {
 
   for (let i = 1; i <= total; i++) {
     const prompt = `
-Create ONE multiple-choice question from the study notes.
+Create ONE multiple-choice question based ONLY on the study notes. Do NOT copy or repeat the study notes in your answer. Return ONLY the question and four choices. Do not add introductions, summaries, notes, or extra text.
 
 Difficulty: ${difficulty}
 
@@ -674,3 +674,4 @@ start().catch(error => {
   process.exit(1);
 
 });
+
