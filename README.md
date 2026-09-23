@@ -46,3 +46,7 @@ The debugging request is processed using the local QVAC model rather than a clou
 ## License
 
 MIT License.
+
+## Project Version
+
+Version 1.0.0 - QVAC Debug Detective AI.
