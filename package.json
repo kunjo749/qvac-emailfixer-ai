@@ -1,7 +1,7 @@
 {
-  "name": "qvac-debug-detective-ai",
+  "name": "qvac-emailfixer-ai",
   "version": "1.0.0",
-  "description": "A local AI debugging assistant powered by Tether QVAC",
+  "description": "A local AI email rewriting tool powered by Tether QVAC",
   "main": "app.js",
   "type": "module",
   "scripts": {
@@ -10,7 +10,8 @@
   "keywords": [
     "qvac",
     "ai",
-    "debugging",
+    "email",
+    "writing",
     "local-ai"
   ],
   "author": "",
