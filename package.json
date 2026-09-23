@@ -1,0 +1,21 @@
+{
+  "name": "qvac-debug-detective-ai",
+  "version": "1.0.0",
+  "description": "A local AI debugging assistant powered by Tether QVAC",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
+    "qvac",
+    "ai",
+    "debugging",
+    "local-ai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@qvac/sdk": "^0.19.1"
+  }
+}
