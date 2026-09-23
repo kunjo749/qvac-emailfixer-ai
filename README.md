@@ -1,52 +1,86 @@
-# QVAC Debug Detective AI
+\# QVAC StudyForge AI
 
-A local AI debugging assistant powered by Tether QVAC.
 
-## Features
 
-- Analyze JavaScript code and error messages
-- Identify likely root causes
-- Suggest practical fixes
-- Explain why a fix works
-- Provide a next debugging check
-- Run AI inference locally with QVAC
+A local AI study assistant powered by Tether QVAC.
 
-## QVAC SDK
 
-This project uses @qvac/sdk version 0.19.1.
+
+QVAC StudyForge AI turns study notes into a multiple-choice practice exam using AI inference on the user's device.
+
+
+
+\## Features
+
+
+
+\- Generate 3 or 5 practice questions
+
+\- Easy, Medium, and Hard difficulty
+
+\- Four multiple-choice options per question
+
+\- Uses local QVAC AI inference
+
+\- No cloud AI API required
+
+\- Shows QVAC engine and model status
+
+\- Generation counter
+
+\- Simple browser-based interface
+
+
+
+\## QVAC Integration
+
+
+
+This project uses the Tether QVAC JavaScript SDK.
+
+
 
 QVAC functions used:
 
-- loadModel()
-- completion()
-- unloadModel()
 
-The application uses the QVAC Llama.cpp completion plugin.
 
-## Run
+\- `loadModel()`
 
-npm install
+\- `completion()`
 
-npm start
+\- `unloadModel()`
 
-Then open http://localhost:3000 in a browser.
 
-## How It Works
 
-1. Enter JavaScript code.
-2. Enter the error message.
-3. Enter the developer goal.
-4. Click Analyze Bug.
-5. QVAC generates a local debugging analysis.
+The application loads the QVAC Llama 3.2 1B model and generates each practice question through QVAC completion.
 
-## Local AI
 
-The debugging request is processed using the local QVAC model rather than a cloud AI API.
 
-## License
+\## Requirements
 
-MIT License.
 
-## Project Version
 
-Version 1.0.0 - QVAC Debug Detective AI.
+\- Node.js
+
+\- npm
+
+\- Windows, macOS, or Linux
+
+\- Internet connection for the initial dependency/model setup
+
+
+
+\## Installation
+
+
+
+Clone the repository:
+
+
+
+```bash
+
+git clone https://github.com/MelmarKun/qvac-debug-detective-ai.git
+
+cd qvac-debug-detective-ai
+
